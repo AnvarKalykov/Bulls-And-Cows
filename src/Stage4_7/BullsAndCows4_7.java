@@ -4,119 +4,88 @@ import java.util.Scanner;
 
 public class BullsAndCows4_7 {
     public static void main(String[] args) {
-        Game game = new Game();
-        game.play();
-    }
-}
 
-class Grade {
-    int bulls;
-    int cows;
+        Scanner sc = new Scanner(System.in);
 
-    public Grade(int bulls, int cows) {
-        this.bulls = bulls;
-        this.cows = cows;
-    }
-}
-
-
-class Game {
-    int turn = 1;
-    String secret;
-
-    private static int getSecretLength() {
         System.out.println("Please, enter the secret code's length:");
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextInt();
-    }
 
-    private static StringBuilder getRandomData() {
-        long pseudoRandomNumber = System.nanoTime();
-        StringBuilder stringBuilder = new StringBuilder(String.valueOf(pseudoRandomNumber));
-        stringBuilder.reverse();
-        return stringBuilder;
-    }
+        int n;
+        while (true) {
 
-    private static String getSecret(int secretLength) {
-        StringBuilder secret = new StringBuilder(secretLength);
-        StringBuilder randomData = getRandomData();
-        int i = 0;
+            n = sc.nextInt();
 
-        while (secret.length() < secretLength) {
-            if (i == randomData.length()) {
-                randomData = getRandomData();
-                i = 0;
-            }
-
-            if (secret.toString().indexOf(randomData.charAt(i)) == -1) {
-                secret.append(randomData.charAt(i));
-            }
-
-            i++;
-        }
-
-        return secret.toString();
-
-    }
-
-    private static String getGuess() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.next();
-    }
-
-    private Grade getGrade(String guess) {
-        int bulls = 0;
-        int cows = 0;
-
-        for (int i = 0; i < guess.length(); i++) {
-            if (guess.charAt(i) == secret.charAt(i)) {
-                bulls++;
-            } else if (secret.indexOf(guess.charAt(i)) != -1) {
-                cows++;
+            if (n <= 10) {
+                break;
+            } else {
+                System.out.println("Error: can't generate a secret number with a length of" + n
+                        + " because there aren't enough unique digits.");
+                System.out.println("Please enter the length again:");
             }
         }
-        return new Grade(bulls, cows);
-    }
 
-    private void printGrade(Grade grade) {
-        String gradeString;
+        sc.nextLine();
 
-        if (grade.bulls != 0 && grade.cows != 0) {
-            gradeString = String.format("%d bull(s) and %d cow(s)", grade.bulls, grade.cows);
-        } else if (grade.bulls != 0) {
-            gradeString = String.format("%d bull(s)", grade.bulls);
-        } else if (grade.cows != 0) {
-            gradeString = String.format("%d cow(s)", grade.cows);
-        } else {
-            gradeString = "None";
-        }
-
-        System.out.printf("Grade: %s", gradeString);
-        System.out.println();
-    }
-
-    void play() {
-        String guess;
-        int secretLength = getSecretLength();
-
-        while (secretLength > 10) {
-            System.out.println("Error: secret length cannot be greater than 10");
-            secretLength = getSecretLength();
-        }
-
-        secret = getSecret(secretLength);
+        String secretCode = generateRandomNumber(n);
 
         System.out.println("Okay, let's start a game!");
 
-        do {
-            System.out.printf("Turn %d:\n",turn);
-            guess = getGuess();
-            Grade grade = getGrade(guess);
-            printGrade(grade);
-            turn++;
+        int turn = 1;
 
-        } while (!guess.equals(secret));
+        while (true) {
 
+            int bulls = 0;
+            int cows = 0;
+
+            System.out.println("Turn " + turn++ + ":");
+
+            String userCode = sc.nextLine();
+
+            if (userCode.equals(secretCode)) {
+                System.out.println("Grade: " + n + " bulls");
+                break;
+            }
+
+            for (int i = 0; i < secretCode.length(); i++) {
+
+                if (secretCode.charAt(i) == userCode.charAt(i)) {
+                    bulls++;
+                } else if (secretCode.contains(String.valueOf(userCode.charAt(i)))) {
+                    cows++;
+                }
+            }
+
+            String bullsStr = bulls > 1 ? "bulls" : "bull";
+            String cowsStr = cows > 1 ? "cows" : "cow";
+
+            if (bulls == 0 && cows == 0) {
+                System.out.println("Grade: None.");
+            } else if (bulls > 0 && cows == 0) {
+                System.out.println("Grade: " + bulls + " " + bullsStr);
+            } else if (cows > 0 && bulls == 0) {
+                System.out.println("Grade: " + cows + " " + cowsStr);
+            } else if (cows > 0 && bulls > 0) {
+                System.out.println("Grade: " + bulls + " " + bullsStr + " and " + cows + " " + cowsStr);
+            }
+        }
         System.out.println("Congratulations! You guessed the secret code.");
+    }
+
+    private static String generateRandomNumber(int length) {
+
+        String randomNumber = "";
+
+        while (randomNumber.length() < length) {
+
+            String rand = String.valueOf(System.nanoTime());
+
+            for (int i = 0; i < rand.length(); i++) {
+
+                if (randomNumber.length() < length && !randomNumber.contains(String.valueOf(rand.charAt(i)))) {
+
+                    randomNumber += rand.charAt(i);
+                }
+            }
+        }
+        return randomNumber;
     }
 }

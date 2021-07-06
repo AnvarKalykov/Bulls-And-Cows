@@ -28,23 +28,31 @@ import java.util.Scanner;
 
 public class BullsAndCows3_7 {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Random random = new Random();
-        int inputNumber = scanner.nextInt();
 
-        long pseudoRandomNumber = System.nanoTime();
-        StringBuilder str = new StringBuilder();
-        if (inputNumber > 10) {
-            System.out.println("Error: can't generate a secret number with a length of " + inputNumber + " because there aren't enough unique digits.");
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+
+        if (n > 10) {
+            System.out.println("Error: can't generate a secret number with a length of" + n
+                    + " because there aren't enough unique digits.");
         } else {
-            for (int i = 0; i < inputNumber; i++) {
-                if (Long.toString(pseudoRandomNumber).charAt(0) != 0) {
-                    str.append(Long.toString(pseudoRandomNumber).charAt(i));
+
+            String randomNumber = "";
+
+            while (randomNumber.length() < n) {
+
+                String rand = String.valueOf(System.nanoTime());
+
+                for (int i = 0; i < rand.length(); i++) {
+
+                    if (randomNumber.length() < n && !randomNumber.contains(String.valueOf(rand.charAt(i)))) {
+
+                        randomNumber += rand.charAt(i);
+                    }
                 }
-
             }
-            System.out.print("The random secret number is " + str + ".");
-
+            System.out.println("The random secret number is " + randomNumber + ".");
         }
     }
 }

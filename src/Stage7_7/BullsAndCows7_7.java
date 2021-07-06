@@ -1,9 +1,9 @@
-package Stage6_7;
+package Stage7_7;
 
 import java.util.Random;
 import java.util.Scanner;
 
-public class BullsAndCows6_7 {
+public class BullsAndCows7_7 {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
